@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXID 2025-2026 台灣演唱會市場深度分析報告 (詳盡分析版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
+            scroll-behavior: smooth;
+        }
+        .font-kr {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #6d28d9, #8b5cf6, #d5b9fb);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        h1, h2, h3 {
+            font-weight: 900;
+        }
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 6px solid #8b5cf6;
+            padding-left: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .kpi-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transition: all 0.3s ease-in-out;
+            border-top: 4px solid #a78bfa;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0) 70%);
+            transition: all 0.5s ease-in-out;
+            transform: scale(0);
+        }
+        .kpi-card:hover::before {
+            transform: scale(1);
+        }
+        .kpi-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .kpi-title {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 700;
+        }
+        .kpi-value {
+            font-size: 2.75rem;
+            color: #4c1d95;
+            font-weight: 900;
+        }
+        .testimonial {
+            background: linear-gradient(145deg, #f9fafb, #f3f4f6);
+            border-left: 4px solid #a78bfa;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            color: #1f2937;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .testimonial:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: #e9d5ff;
+        }
+        .testimonial p {
+            font-style: italic;
+        }
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .insight {
+            background: #faf5ff;
+            color: #5b21b6;
+            border-left: 4px solid #8b5cf6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            line-height: 1.75;
+        }
+        .print-button {
+            transition: all 0.3s;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body, main, section, div, header, footer {
+                box-shadow: none !important;
+                border: none !important;
+                background: white !important;
+            }
+            .kpi-card, .chart-container, .testimonial {
+                page-break-inside: avoid;
+            }
+        }
+        [data-lang-ko] { font-family: 'Noto Sans KR', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="control-panel" class="no-print fixed top-4 right-4 z-50 flex space-x-2">
+        <button id="lang-switch-btn" class="print-button bg-white/80 backdrop-blur-sm text-purple-700 font-bold py-2 px-4 rounded-full shadow-lg hover:bg-purple-100">
+            한국어
+        </button>
+        <button onclick="window.print()" class="print-button bg-white/80 backdrop-blur-sm text-purple-700 font-bold py-2 px-4 rounded-full shadow-lg hover:bg-purple-100">
+            <span data-lang-tw="列印報告">列印報告</span>
+            <span data-lang-ko="보고서 인쇄" class="hidden">보고서 인쇄</span>
+        </button>
+    </div>
+
+    <header class="header p-8 sm:p-12 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-black" data-lang-tw="EXID 2025-2026 台灣演唱會市場深度分析報告">EXID 2025-2026 台灣演唱會市場深度分析報告</h1>
+        <h1 class="text-4xl md:text-5xl font-black hidden" data-lang-ko="EXID 2025-2026 대만 콘서트 시장 심층 분석 보고서">EXID 2025-2026 대만 콘서트 시장 심층 분석 보고서</h1>
+        <p class="text-md mt-3 opacity-80">
+            <span data-lang-tw="【 詳盡分析版 v5.0 Final Version 】">【 詳盡分析版 v5.0 Final Version 】</span>
+            <span data--lang-ko="【 심층 분석판 v5.0 Final Version 】" class="hidden">【 심층 분석판 v5.0 Final Version 】</span>
+        </p>
+        <p class="text-sm mt-2">
+            <span data-lang-tw="報告生成時間：2025年09月01日">報告生成時間：2025年09月01日</span>
+            <span data-lang-ko="보고서 생성 시간: 2025년 9월 1일" class="hidden">보고서 생성 시간: 2025년 9월 1일</span>
+        </p>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-10">
+
+        <!-- Executive Summary -->
+        <section id="summary" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span data-lang-tw="決策摘要">決策摘要</span>
+                <span data-lang-ko="핵심 요약" class="hidden">핵심 요약</span>
+            </h2>
+            <div class="bg-white p-8 rounded-xl shadow-xl space-y-5 text-gray-700 leading-relaxed">
+                 <p data-lang-tw="本報告旨在呈現 EXID 於台灣市場舉辦專場活動的**高度可行性**與**巨大商業潛力**。透過為期數週、由粉絲社群自發性擴散的市場意願調查，我們成功觸及 **412 位**核心粉絲，並得出以下關鍵商業洞察：">本報告旨在呈現 EXID 於台灣市場舉辦專場活動的**高度可行性**與**巨大商業潛力**。透過為期數週、由粉絲社群自發性擴散的市場意願調查，我們成功觸及 **412 位**核心粉絲，並得出以下關鍵商業洞察：</p>
+                <p data-lang-ko="본 보고서는 대만 시장에서의 EXID 단독 이벤트 개최에 대한 **높은 실현 가능성**과 **거대한 상업적 잠재력**을 제시하는 것을 목표로 합니다. 수 주간 팬 커뮤니티의 자발적인 참여로 진행된 시장 수요 조사를 통해 **412명**의 핵심 팬에게 도달했으며, 다음과 같은 핵심 비즈니스 인사이트를 도출했습니다:" class="hidden">본 보고서는 대만 시장에서의 EXID 단독 이벤트 개최에 대한 **높은 실현 가능성**과 **거대한 상업적 잠재력**을 제시하는 것을 목표로 합니다. 수 주간 팬 커뮤니티의 자발적인 참여로 진행된 시장 수요 조사를 통해 **412명**의 핵심 팬에게 도달했으며, 다음과 같은 핵심 비즈니스 인사이트를 도출했습니다:</p>
+                
+                <ul class="list-decimal list-outside ml-6 space-y-3">
+                    <li>
+                        <strong class="text-purple-700 text-lg" data-lang-tw="已驗證的強大市場動能：">已驗證的強大市場動能：</strong>
+                        <strong class="text-purple-700 text-lg hidden" data-lang-ko="검증된 강력한 시장 동력:">검증된 강력한 시장 동력:</strong>
+                        <span data-lang-tw="僅憑核心粉絲的意願，已凝聚出超過 <strong class='text-2xl'>新台幣 330 萬元</strong> 的預估票房潛力。這證明市場不僅存在，且已處於隨時可以引爆的活躍狀態。">僅憑核心粉絲的意願，已凝聚出超過 <strong class='text-2xl'>新台幣 330 萬元</strong> 的預估票房潛力。這證明市場不僅存在，且已處於隨時可以引爆的活躍狀態。</span>
+                        <span data-lang-ko="핵심 팬들의 참여 의사만으로도 이미 **330만 대만 달러(약 1억 4천만 원)**를 초과하는 예상 티켓 매출 잠재력이 확인되었습니다. 이는 시장이 존재할 뿐만 아니라, 언제든 폭발할 수 있는 활성화 상태임을 증명합니다." class="hidden">핵심 팬들의 참여 의사만으로도 이미 **330만 대만 달러(약 1억 4천만 원)**를 초과하는 예상 티켓 매출 잠재력이 확인되었습니다. 이는 시장이 존재할 뿐만 아니라, 언제든 폭발할 수 있는 활성화 상태임을 증명합니다.</span>
+                    </li>
+                    <li>
+                        <strong class="text-purple-700 text-lg" data-lang-tw="黃金結構的消費主力：">黃金結構的消費主力：</strong>
+                        <strong class="text-purple-700 text-lg hidden" data-lang-ko="황금 비율의 핵심 소비층:">황금 비율의 핵심 소비층:</strong>
+                        <span data-lang-tw="本次調查最重要的發現是，粉絲年齡層以 <strong class='text-2xl'>30-39 歲 (160位)</strong> 為最大群體，其次為 **25-29 歲 (149位)**。這代表市場核心是由一群**經濟獨立、消費力穩定、且忠誠度極高**的成熟粉絲所構成，為票房的穩定性與周邊商品消費力提供了最強力的保證。">本次調查最重要的發現是，粉絲年齡層以 <strong class='text-2xl'>30-39 歲 (160位)</strong> 為最大群體，其次為 **25-29 歲 (149位)**。這代表市場核心是由一群**經濟獨立、消費力穩定、且忠誠度極高**的成熟粉絲所構成，為票房的穩定性與周邊商品消費力提供了最強力的保證。</span>
+                        <span data-lang-ko="본 조사의 가장 중요한 발견은 팬 연령층이 **30-39세(160명)**를 최대 그룹으로, **25-29세(149명)**가 그 뒤를 잇는다는 점입니다. 이는 시장의 핵심이 **경제적으로 독립되고, 안정적인 소비력과 높은 충성도**를 가진 성숙한 팬들로 구성되어 있음을 의미하며, 이는 티켓 판매 안정성과 굿즈 소비력에 대한 가장 강력한 보증수표입니다." class="hidden">본 조사의 가장 중요한 발견은 팬 연령층이 **30-39세(160명)**를 최대 그룹으로, **25-29세(149명)**가 그 뒤를 잇는다는 점입니다. 이는 시장의 핵심이 **경제적으로 독립되고, 안정적인 소비력과 높은 충성도**를 가진 성숙한 팬들로 구성되어 있음을 의미하며, 이는 티켓 판매 안정성과 굿즈 소비력에 대한 가장 강력한 보증수표입니다.</span>
+                    </li>
+                    <li>
+                        <strong class="text-purple-700 text-lg" data-lang-tw="極低的活動企劃風險：">極低的活動企劃風險：</strong>
+                        <strong class="text-purple-700 text-lg hidden" data-lang-ko="매우 낮은 이벤트 기획 리스크:">매우 낮은 이벤트 기획 리스크:</strong>
+                        <span data-lang-tw="調查數據清晰地描繪出粉絲的偏好，包括**票價甜蜜點 (NT$ 4,201-5,800)**、最受渴望的福利（如Hi-Touch）、以及地點選擇（台北）。這為活動企劃提供了明確的指引，能有效降低市場預測的風險，並最大化收益。">調查數據清晰地描繪出粉絲的偏好，包括**票價甜蜜點 (NT$ 4,201-5,800)**、最受渴望的福利（如Hi-Touch）、以及地點選擇（台北）。這為活動企劃提供了明確的指引，能有效降低市場預測的風險，並最大化收益。</span>
+                        <span data-lang-ko="설문 데이터는 **티켓 가격의 스위트 스팟(NT$ 4,201-5,800)**, 가장 선호하는 팬 베네핏(예: 하이터치), 그리고 개최 도시(타이베이) 등 팬들의 선호도를 명확하게 보여줍니다. 이는 이벤트 기획에 대한 명확한 가이드라인을 제공하여, 시장 예측의 리스크를 효과적으로 줄이고 수익을 극대화할 수 있습니다." class="hidden">설문 데이터는 **티켓 가격의 스위트 스팟(NT$ 4,201-5,800)**, 가장 선호하는 팬 베네핏(예: 하이터치), 그리고 개최 도시(타이베이) 등 팬들의 선호도를 명확하게 보여줍니다. 이는 이벤트 기획에 대한 명확한 가이드라인을 제공하여, 시장 예측의 리스크를 효과적으로 줄이고 수익을 극대화할 수 있습니다.</span>
+                    </li>
+                    <li>
+                        <strong class="text-purple-700 text-lg" data-lang-tw="無可取代的粉絲忠誠度：">無可取代的粉絲忠誠度：</strong>
+                        <strong class="text-purple-700 text-lg hidden" data-lang-ko="대체 불가능한 팬 충성도:">대체 불가능한 팬 충성도:</strong>
+                        <span data--lang-tw="粉絲留言中充滿了長久等待的真誠情感，甚至有粉絲表示**自費跨國參與海外演出**，並直言「即便和Blackpink選一個我還是選Exid」。這種高度的品牌忠誠度，是票房最穩固的護城河。">粉絲留言中充滿了長久等待的真誠情感，甚至有粉絲表示**自費跨國參與海外演出**，並直言「即便和Blackpink選一個我還是選Exid」。這種高度的品牌忠誠度，是票房最穩固的護城河。</span>
+                        <span data-lang-ko="팬들의 코멘트에는 오랜 기다림의 진심이 담겨 있으며, 심지어 **자비로 해외 공연에 참여**했다는 팬과 "블랙핑크와 EXID 중 하나를 선택해야 한다면, 그래도 EXID를 선택하겠다"고 말한 팬도 있었습니다. 이러한 높은 수준의 브랜드 충성도는 티켓 판매의 가장 견고한 방어선입니다." class="hidden">팬들의 코멘트에는 오랜 기다림의 진심이 담겨 있으며, 심지어 **자비로 해외 공연에 참여**했다는 팬과 "블랙핑크와 EXID 중 하나를 선택해야 한다면, 그래도 EXID를 선택하겠다"고 말한 팬도 있었습니다. 이러한 높은 수준의 브랜드 충성도는 티켓 판매의 가장 견고한 방어선입니다.</span>
+                    </li>
+                </ul>
+                <p class="font-bold text-xl text-right text-purple-800 mt-6">
+                    <span data-lang-tw="結論：這不僅是一個充滿潛力的市場，而是一個結構健康、消費力強勁、且不容錯過的黃金市場機會。">結論：這不僅是一個充滿潛力的市場，而是一個結構健康、消費力強勁、且不容錯過的黃金市場機會。</span>
+                    <span data-lang-ko="결론: 이것은 잠재력 있는 시장일 뿐만 아니라, 구조적으로 건강하고, 소비력이 강력하며, 놓쳐서는 안 될 황금 같은 시장 기회입니다." class="hidden">결론: 이것은 잠재력 있는 시장일 뿐만 아니라, 구조적으로 건강하고, 소비력이 강력하며, 놓쳐서는 안 될 황금 같은 시장 기회입니다.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Core Metrics -->
+        <section id="metrics" class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                <span data-lang-tw="核心市場數據">核心市場數據</span>
+                <span data-lang-ko="핵심 시장 데이터" class="hidden">핵심 시장 데이터</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="kpi-card text-center">
+                    <h3 class="kpi-title" data-lang-tw="問卷總填寫人數">問卷總填寫人數</h3>
+                    <h3 class="kpi-title hidden" data-lang-ko="총 설문 응답자 수">총 설문 응답자 수</h3>
+                    <p class="kpi-value">412 <span class="text-xl text-gray-500 font-medium" data-lang-tw="人">人</span><span class="text-xl text-gray-500 font-medium hidden" data-lang-ko="명">명</span></p>
+                    <p class="text-md text-gray-600 mt-2" data-lang-tw="在無任何商業宣傳下的核心粉絲數量">在無任何商業宣傳下的核心粉絲數量</p>
+                    <p class="text-md text-gray-600 mt-2 hidden" data-lang-ko="상업적 홍보 없이 확보된 핵심 팬 수">상업적 홍보 없이 확보된 핵심 팬 수</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="kpi-title" data-lang-tw="預計總參與人數 (購票總數)">預計總參與人數 (購票總數)</h3>
+                    <h3 class="kpi-title hidden" data-lang-ko="예상 총 관객 수 (티켓 기준)">예상 총 관객 수 (티켓 기준)</h3>
+                    <p class="kpi-value">646 <span class="text-xl text-gray-500 font-medium" data-lang-tw="人">人</span><span class="text-xl text-gray-500 font-medium hidden" data-lang-ko="명">명</span></p>
+                    <p class="text-md text-gray-600 mt-2" data-lang-tw="核心粉絲自帶的乘數效應 (平均每人 1.57 張)">核心粉絲自帶的乘數效應 (平均每人 1.57 張)</p>
+                    <p class="text-md text-gray-600 mt-2 hidden" data-lang-ko="핵심 팬의 확산 효과 (1인당 평균 1.57매)">핵심 팬의 확산 효과 (1인당 평균 1.57매)</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="kpi-title" data-lang-tw="預估總票房金額">預估總票房金額</h3>
+                    <h3 class="kpi-title hidden" data-lang-ko="예상 총 티켓 매출">예상 총 티켓 매출</h3>
+                    <p class="kpi-value">NT$ 3,315,747</p>
+                    <p class="text-md text-gray-600 mt-2" data-lang-tw="僅基於核心粉絲樣本的保守估計">僅基於核心粉絲樣本的保守估計</p>
+                    <p class="text-md text-gray-600 mt-2 hidden" data-lang-ko="핵심 팬 샘플 기반의 보수적 추정치">핵심 팬 샘플 기반의 보수적 추정치</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Detailed Analysis Sections -->
+        <div class="space-y-16">
+
+            <!-- Section 1: Participation Intention -->
+            <section id="intention">
+                 <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    <span data-lang-tw="深度洞察(1): 參與意願 - 一個需求已達沸點的市場">深度洞察(1): 參與意願 - 一個需求已達沸點的市場</span>
+                    <span data-lang-ko="심층 분석(1): 참여 의향 - 수요가 최고조에 달한 시장" class="hidden">심층 분석(1): 참여 의향 - 수요가 최고조에 달한 시장</span>
+                </h2>
+                <div class="chart-container">
+                    <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="「如果EXID舉辦活動，您參加的意願有多高？」 (1-5分，5為最高)">「如果EXID舉辦活動，您參加的意願有多高？」 (1-5分，5為最高)</h3>
+                    <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="「EXID가 이벤트를 개최한다면, 참여 의향은 어느 정도입니까?」 (1-5점, 5점이 가장 높음)">「EXID가 이벤트를 개최한다면, 참여 의향은 어느 정도입니까?」 (1-5점, 5점이 가장 높음)</h3>
+                    <div class="relative h-96"><canvas id="intentionChart"></canvas></div>
+                    <div class="insight mt-4">
+                        <p>
+                            <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                            <span data-lang-tw="粉絲的參與意願極度強烈且集中。在412位填答者中，高達 **263位 (63.8%)** 的粉絲表達了最高的5分意願（非去不可），而給予4分（極可能參加）的粉絲也有 **126位 (30.6%)**。兩者合計，**超過 94% 的核心粉絲都展現了高度的參與意願**。這是一個非常驚人的數字，它證明市場的需求不僅存在，更是已經達到了「沸點」，只要活動消息一出，就能輕易轉化為實際的購票行動。對於主辦方而言，這代表著極低的市場教育成本與極高的票房基本盤。">粉絲的參與意願極度強烈且集中。在412位填答者中，高達 **263位 (63.8%)** 的粉絲表達了最高的5分意願（非去不可），而給予4分（極可能參加）的粉絲也有 **126位 (30.6%)**。兩者合計，**超過 94% 的核心粉絲都展現了高度的參與意願**。這是一個非常驚人的數字，它證明市場的需求不僅存在，更是已經達到了「沸點」，只要活動消息一出，就能輕易轉化為實際的購票行動。對於主辦方而言，這代表著極低的市場教育成本與極高的票房基本盤。</span>
+                            <span data-lang-ko="팬들의 참여 의향은 매우 강력하고 집중되어 있습니다. 412명의 응답자 중, 무려 **263명(63.8%)**이 가장 높은 5점('반드시 가겠다')을 선택했으며, 4점('참여 가능성 매우 높음')을 선택한 팬도 **126명(30.6%)**에 달합니다. 둘을 합하면, **핵심 팬의 94% 이상이 높은 참여 의향**을 보인 것입니다. 이는 매우 놀라운 수치로, 시장의 수요가 존재할 뿐만 아니라 이미 '최고조'에 달했음을 증명합니다. 이벤트 소식이 발표되기만 하면 쉽게 실제 티켓 구매로 이어질 수 있습니다. 주최측 입장에서 이는 매우 낮은 시장 교육 비용과 매우 높은 기본 흥행 수익을 의미합니다." class="hidden">팬들의 참여 의향은 매우 강력하고 집중되어 있습니다. 412명의 응답자 중, 무려 **263명(63.8%)**이 가장 높은 5점('반드시 가겠다')을 선택했으며, 4점('참여 가능성 매우 높음')을 선택한 팬도 **126명(30.6%)**에 달합니다. 둘을 합하면, **핵심 팬의 94% 이상이 높은 참여 의향**을 보인 것입니다. 이는 매우 놀라운 수치로, 시장의 수요가 존재할 뿐만 아니라 이미 '최고조'에 달했음을 증명합니다. 이벤트 소식이 발표되기만 하면 쉽게 실제 티켓 구매로 이어질 수 있습니다. 주최측 입장에서 이는 매우 낮은 시장 교육 비용과 매우 높은 기본 흥행 수익을 의미합니다.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Age & Seniority -->
+            <section id="age_seniority">
+                 <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <span data-lang-tw="深度洞察(2): 粉絲輪廓 - 成熟、忠誠、高消費力的黃金結構">深度洞察(2): 粉絲輪廓 - 成熟、忠誠、高消費力的黃金結構</span>
+                    <span data-lang-ko="심층 분석(2): 팬 프로필 - 성숙하고 충성도 높은 고가치 소비층" class="hidden">심층 분석(2): 팬 프로필 - 성숙하고 충성도 높은 고가치 소비층</span>
+                </h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="年齡分佈：30代粉絲成為最大消費主力">年齡分佈：30代粉絲成為最大消費主力</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="연령 분포: 30대 팬이 핵심 소비층으로 부상">연령 분포: 30대 팬이 핵심 소비층으로 부상</h3>
+                        <div class="relative h-96"><canvas id="ageChart"></canvas></div>
+                        <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="本次調查最重要的發現是，粉絲群體以 **30-39 歲 (160位, 38.8%)** 為最大宗，並與 **25-29 歲 (149位, 36.2%)** 共同構成了超過 **300 人 (佔比 75%)** 的核心消費群。這粉碎了「偶像粉絲偏年輕」的刻板印象，證明EXID的市場主力是一群擁有**獨立經濟能力、高度消費自主權與穩定生活型態**的成熟社會人士。他們不僅買得起票，更有能力消費更高價位的VIP套票與周邊商品，是所有售票活動中最理想、最穩固的目標客群。">本次調查最重要的發現是，粉絲群體以 **30-39 歲 (160位, 38.8%)** 為最大宗，並與 **25-29 歲 (149位, 36.2%)** 共同構成了超過 **300 人 (佔比 75%)** 的核心消費群。這粉碎了「偶像粉絲偏年輕」的刻板印象，證明EXID的市場主力是一群擁有**獨立經濟能力、高度消費自主權與穩定生活型態**的成熟社會人士。他們不僅買得起票，更有能力消費更高價位的VIP套票與周邊商品，是所有售票活動中最理想、最穩固的目標客群。</span>
+                                <span data-lang-ko="본 조사의 가장 중요한 발견은, 팬 그룹이 **30-39세(160명, 38.8%)**를 최대 그룹으로, **25-29세(149명, 36.2%)**와 함께 **300명 이상(전체의 75%)**의 핵심 소비층을 형성한다는 것입니다. 이는 '아이돌 팬은 어리다'는 고정관념을 깨고, EXID의 시장 주력이 **독립적인 경제력, 높은 소비 결정권, 그리고 안정적인 라이프스타일**을 가진 성숙한 사회인들임을 증명합니다. 이들은 단순히 티켓을 구매할 여력이 있을 뿐만 아니라, 더 비싼 VIP 패키지와 굿즈를 소비할 능력이 있는, 모든 유료 이벤트에서 가장 이상적이고 안정적인 타겟 고객입니다." class="hidden">본 조사의 가장 중요한 발견은, 팬 그룹이 **30-39세(160명, 38.8%)**를 최대 그룹으로, **25-29세(149명, 36.2%)**와 함께 **300명 이상(전체의 75%)**의 핵심 소비층을 형성한다는 것입니다. 이는 '아이돌 팬은 어리다'는 고정관념을 깨고, EXID의 시장 주력이 **독립적인 경제력, 높은 소비 결정권, 그리고 안정적인 라이프스타일**을 가진 성숙한 사회인들임을 증명합니다. 이들은 단순히 티켓을 구매할 여력이 있을 뿐만 아니라, 더 비싼 VIP 패키지와 굿즈를 소비할 능력이 있는, 모든 유료 이벤트에서 가장 이상적이고 안정적인 타겟 고객입니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="粉絲資歷：超過85%為支持5年以上的鐵粉">粉絲資歷：超過85%為支持5年以上的鐵粉</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="팬 경력: 85% 이상이 5년차 이상 '찐팬'">팬 경력: 85% 이상이 5년차 이상 '찐팬'</h3>
+                        <div class="relative h-96"><canvas id="seniorityChart"></canvas></div>
+                         <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="數據再次印證了粉絲的超高忠誠度。支持**8年以上**的骨灰級粉絲 (142位) 與 **5-8年**的資深粉絲 (212位) 合計佔比高達 **86.4%**。這代表EXID的粉絲群並非由短期的潮流所驅動，而是一個經歷了時間考驗、情感連結極度深厚的穩定社群。對於追求長期合作關係的經紀公司與主辦方而言，這是一個極具吸引力的特質，代表著市場的穩定性與可預測性遠高於其他藝人。">數據再次印證了粉絲的超高忠誠度。支持**8年以上**的骨灰級粉絲 (142位) 與 **5-8年**的資深粉絲 (212位) 合計佔比高達 **86.4%**。這代表EXID的粉絲群並非由短期的潮流所驅動，而是一個經歷了時間考驗、情感連結極度深厚的穩定社群。對於追求長期合作關係的經紀公司與主辦方而言，這是一個極具吸引力的特質，代表著市場的穩定性與可預測性遠高於其他藝人。</span>
+                                <span data-lang-ko="데이터는 팬들의 초고도 충성도를 다시 한번 입증합니다. **8년 이상** 지지해 온 골수 팬(142명)과 **5-8년** 경력의 베테랑 팬(212명)을 합한 비율이 총 **86.4%**에 달합니다. 이는 EXID의 팬덤이 단기적인 유행에 의해 움직이는 것이 아니라, 시간의 시험을 거쳐 매우 깊은 정서적 유대를 형성한 안정적인 커뮤니티임을 의미합니다. 장기적인 파트너십을 추구하는 소속사와 주최사에게 이는 매우 매력적인 특징이며, 다른 아티스트보다 시장의 안정성과 예측 가능성이 훨씬 높다는 것을 나타냅니다." class="hidden">데이터는 팬들의 초고도 충성도를 다시 한번 입증합니다. **8년 이상** 지지해 온 골수 팬(142명)과 **5-8년** 경력의 베테랑 팬(212명)을 합한 비율이 총 **86.4%**에 달합니다. 이는 EXID의 팬덤이 단기적인 유행에 의해 움직이는 것이 아니라, 시간의 시험을 거쳐 매우 깊은 정서적 유대를 형성한 안정적인 커뮤니티임을 의미합니다. 장기적인 파트너십을 추구하는 소속사와 주최사에게 이는 매우 매력적인 특징이며, 다른 아티스트보다 시장의 안정성과 예측 가능성이 훨씬 높다는 것을 나타냅니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Demand: Price & Benefits -->
+            <section id="demand">
+                 <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    <span data-lang-tw="深度洞察(3): 市場需求 - 清晰的票價甜蜜點與福利偏好">深度洞察(3): 市場需求 - 清晰的票價甜蜜點與福利偏好</span>
+                    <span data-lang-ko="심층 분석(3): 시장 수요 - 명확한 티켓 가격 및 베네핏 선호도" class="hidden">심층 분석(3): 시장 수요 - 명확한 티켓 가격 및 베네핏 선호도</span>
+                </h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="票價接受度：中高價位接受度極高">票價接受度：中高價位接受度極高</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="티켓 가격 수용도: 중고가에 대한 높은 수용력">티켓 가격 수용도: 중고가에 대한 높은 수용력</h3>
+                        <div class="relative h-96"><canvas id="priceChart"></canvas></div>
+                        <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="市場的價格結構非常健康。**NT$ 4,201 ~ 5,800 (153位)** 的價格區間已成為市場最大共識的「甜蜜點」。加上 **NT$ 2,801 ~ 4,200 (131位)** 的粉絲，這兩個中價位區間合計就囊括了 **284位 (佔比68.9%)** 的粉絲。更重要的是，願意挑戰更高價位（「更高都願意考慮」64位 + 「5,801~7,000」47位）的粉絲也高達 **111人**。這為票價策略提供了極大的彈性：以中價位票券確保票房基本盤，再以高價位的VIP福利套票來最大化營收。">市場的價格結構非常健康。**NT$ 4,201 ~ 5,800 (153位)** 的價格區間已成為市場最大共識的「甜蜜點」。加上 **NT$ 2,801 ~ 4,200 (131位)** 的粉絲，這兩個中價位區間合計就囊括了 **284位 (佔比68.9%)** 的粉絲。更重要的是，願意挑戰更高價位（「更高都願意考慮」64位 + 「5,801~7,000」47位）的粉絲也高達 **111人**。這為票價策略提供了極大的彈性：以中價位票券確保票房基本盤，再以高價位的VIP福利套票來最大化營收。</span>
+                                <span data-lang-ko="시장의 가격 구조는 매우 건강합니다. **NT$4,201-5,800(153명)** 가격대가 시장의 최대 공감대인 '스위트 스팟'으로 자리 잡았습니다. 여기에 **NT$2,801-4,200(131명)**의 팬을 더하면, 이 두 중가 가격대가 총 **284명(68.9%)**의 팬을 확보합니다. 더욱 중요한 것은, 더 높은 가격대('더 높은 가격도 고려' 64명 + '5,801~7,000' 47명)에 도전할 의향이 있는 팬도 **111명**에 달한다는 점입니다. 이는 티켓 가격 전략에 큰 유연성을 제공합니다: 중가 티켓으로 기본 흥행을 보장하고, 고가의 VIP 베네핏 패키지로 수익을 극대화할 수 있습니다." class="hidden">시장의 가격 구조는 매우 건강합니다. **NT$4,201-5,800(153명)** 가격대가 시장의 최대 공감대인 '스위트 스팟'으로 자리 잡았습니다. 여기에 **NT$2,801-4,200(131명)**의 팬을 더하면, 이 두 중가 가격대가 총 **284명(68.9%)**의 팬을 확보합니다. 더욱 중요한 것은, 더 높은 가격대('더 높은 가격도 고려' 64명 + '5,801~7,000' 47명)에 도전할 의향이 있는 팬도 **111명**에 달한다는 점입니다. 이는 티켓 가격 전략에 큰 유연성을 제공합니다: 중가 티켓으로 기본 흥행을 보장하고, 고가의 VIP 베네핏 패키지로 수익을 극대화할 수 있습니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="粉絲福利需求：互動體驗為王，純粹觀演需求龐大">粉絲福利需求：互動體驗為王，純粹觀演需求龐大</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="팬 베네핏 수요: 소통형 체험이 왕, 순수 관람 수요도 막강">팬 베네핏 수요: 소통형 체험이 왕, 순수 관람 수요도 막강</h3>
+                        <div class="relative h-96"><canvas id="benefitsChart"></canvas></div>
+                        <div class="insight mt-4">
+                             <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="粉絲對福利的偏好呈現「雙軌並行」的健康趨勢。一方面，以 **「Hi-Touch (225次)」** 為首的互動體驗型福利，是吸引粉絲購買高價票券的最強驅動力。另一方面，高達 **179位** 的粉絲表示 **「只希望能看到演出」**，這股強大的「純粹觀演」需求，構成了票房最穩固的基本盤。這種雙軌並行的需求，讓主辦方可以同時規劃「高福利VIP票」與「純觀演座位票」，滿足不同客群，將票房潛力開發到極致。">粉絲對福利的偏好呈現「雙軌並行」的健康趨勢。一方面，以 **「Hi-Touch (225次)」** 為首的互動體驗型福利，是吸引粉絲購買高價票券的最強驅動力。另一方面，高達 **179位** 的粉絲表示 **「只希望能看到演出」**，這股強大的「純粹觀演」需求，構成了票房最穩固的基本盤。這種雙軌並行的需求，讓主辦方可以同時規劃「高福利VIP票」與「純觀演座位票」，滿足不同客群，將票房潛力開發到極致。</span>
+                                <span data-lang-ko="팬들의 베네핏 선호도는 '투 트랙'의 건강한 추세를 보입니다. 한편으로는 **'하이터치'(225회)**를 필두로 한 소통형 체험 베네핏이 고가 티켓 구매를 유도하는 가장 강력한 동력입니다. 다른 한편으로는, **179명**에 달하는 팬들이 **'공연을 보는 것만으로도 충분하다'**고 답해, 이 강력한 '순수 관람' 수요가 흥행의 가장 견고한 기반을 형성합니다. 이러한 투 트랙 수요는 주최측이 '고급 베네핏 VIP 티켓'과 '순수 관람 좌석 티켓'을 동시에 기획하여 다양한 고객층을 만족시키고, 흥행 잠재력을 극대화할 수 있게 합니다." class="hidden">팬들의 베네핏 선호도는 '투 트랙'의 건강한 추세를 보입니다. 한편으로는 **'하이터치'(225회)**를 필두로 한 소통형 체험 베네핏이 고가 티켓 구매를 유도하는 가장 강력한 동력입니다. 다른 한편으로는, **179명**에 달하는 팬들이 **'공연을 보는 것만으로도 충분하다'**고 답해, 이 강력한 '순수 관람' 수요가 흥행의 가장 견고한 기반을 형성합니다. 이러한 투 트랙 수요는 주최측이 '고급 베네핏 VIP 티켓'과 '순수 관람 좌석 티켓'을 동시에 기획하여 다양한 고객층을 만족시키고, 흥행 잠재력을 극대화할 수 있게 합니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Consumption Behavior -->
+            <section id="behavior">
+                 <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    <span data-lang-tw="深度洞察(4): 消費行為 - 一個活躍且具備購買力的市場">深度洞察(4): 消費行為 - 一個活躍且具備購買力的市場</span>
+                    <span data-lang-ko="심층 분석(4): 소비 행태 - 활발하고 구매력 있는 시장" class="hidden">심층 분석(4): 소비 행태 - 활발하고 구매력 있는 시장</span>
+                </h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="官方商品購買經驗">官方商品購買經驗</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="공식 굿즈 구매 경험">공식 굿즈 구매 경험</h3>
+                        <div class="relative h-96"><canvas id="merchChart"></canvas></div>
+                        <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="粉絲群體是成熟的消費者。超過 **300位** 粉絲曾購買過**實體專輯**，近 **240位** 曾購買**官方周邊**，這代表他們擁有為「收藏價值」與「粉絲認同感」付費的習慣。這預示著演唱會現場的**限定周邊商品**將有極高的銷售潛力。更值得注意的是，有 **85位** 尚未購買過的粉絲表示「未來願意購買」，這是一個等待被開發的龐大潛在營收來源。">粉絲群體是成熟的消費者。超過 **300位** 粉絲曾購買過**實體專輯**，近 **240位** 曾購買**官方周邊**，這代表他們擁有為「收藏價值」與「粉絲認同感」付費的習慣。這預示著演唱會現場的**限定周邊商品**將有極高的銷售潛力。更值得注意的是，有 **85位** 尚未購買過的粉絲表示「未來願意購買」，這是一個等待被開發的龐大潛在營收來源。</span>
+                                <span data-lang-ko="팬 그룹은 성숙한 소비자입니다. **300명** 이상이 **음반**을 구매했으며, 거의 **240명**이 **공식 굿즈**를 구매한 경험이 있습니다. 이는 팬들이 '소장 가치'와 '팬심'을 위해 기꺼이 비용을 지불하는 습관을 가지고 있음을 의미합니다. 이는 콘서트 현장에서의 **한정판 굿즈**가 매우 높은 판매 잠재력을 가질 것임을 예고합니다. 더욱 주목할 점은, 아직 구매 경험이 없는 팬 중 **85명**이 '향후 구매 의사가 있다'고 답했다는 것으로, 이는 개발을 기다리는 거대한 잠재 수익원입니다." class="hidden">팬 그룹은 성숙한 소비자입니다. **300명** 이상이 **음반**을 구매했으며, 거의 **240명**이 **공식 굿즈**를 구매한 경험이 있습니다. 이는 팬들이 '소장 가치'와 '팬심'을 위해 기꺼이 비용을 지불하는 습관을 가지고 있음을 의미합니다. 이는 콘서트 현장에서의 **한정판 굿즈**가 매우 높은 판매 잠재력을 가질 것임을 예고합니다. 더욱 주목할 점은, 아직 구매 경험이 없는 팬 중 **85명**이 '향후 구매 의사가 있다'고 답했다는 것으로, 이는 개발을 기다리는 거대한 잠재 수익원입니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="近三年K-POP活動參與經驗">近三年K-POP活動參與經驗</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="최근 3년간 K-POP 이벤트 참여 경험">최근 3년간 K-POP 이벤트 참여 경험</h3>
+                        <div class="relative h-96"><canvas id="attendanceChart"></canvas></div>
+                        <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="目標客群是經驗豐富的演唱會消費者。超過 **65%** 的粉絲在近三年內至少參加過一場售票活動，其中更有近 **41%** 的粉絲參加過三場以上。這代表他們熟悉購票流程、理解票價結構、並習慣為現場體驗付費，極大降低了市場推廣的難度。更具指標性的是，有 **78位 (18.9%)** 粉絲表示**「EXID 將會是我的第一場」**，這證明了EXID擁有獨特的魅力，能吸引到平常不參加活動的潛在消費者，為市場帶來珍貴的「新客」。">目標客群是經驗豐富的演唱會消費者。超過 **65%** 的粉絲在近三年內至少參加過一場售票活動，其中更有近 **41%** 的粉絲參加過三場以上。這代表他們熟悉購票流程、理解票價結構、並習慣為現場體驗付費，極大降低了市場推廣的難度。更具指標性的是，有 **78位 (18.9%)** 粉絲表示**「EXID 將會是我的第一場」**，這證明了EXID擁有獨特的魅力，能吸引到平常不參加活動的潛在消費者，為市場帶來珍貴的「新客」。</span>
+                                <span data--lang-ko="타겟 고객은 경험이 풍부한 콘서트 소비자입니다. **65%** 이상의 팬이 최근 3년 내에 최소 한 번 이상의 유료 이벤트에 참여했으며, 그중 거의 **41%**는 세 번 이상 참여했습니다. 이는 이들이 티켓팅 과정에 익숙하고, 티켓 가격 구조를 이해하며, 라이브 경험에 대한 지불 습관이 형성되어 있어 시장 프로모션의 난이도를 크게 낮춥니다. 더욱 상징적인 것은, **78명(18.9%)**의 팬이 **'EXID가 나의 첫 콘서트가 될 것이다'**라고 답했다는 점으로, 이는 EXID가 평소 이벤트에 참여하지 않는 잠재 소비자까지 끌어들일 수 있는 독보적인 매력을 가지고 있으며, 시장에 귀중한 '신규 고객'을 유입시킬 수 있음을 증명합니다." class="hidden">타겟 고객은 경험이 풍부한 콘서트 소비자입니다. **65%** 이상의 팬이 최근 3년 내에 최소 한 번 이상의 유료 이벤트에 참여했으며, 그중 거의 **41%**는 세 번 이상 참여했습니다. 이는 이들이 티켓팅 과정에 익숙하고, 티켓 가격 구조를 이해하며, 라이브 경험에 대한 지불 습관이 형성되어 있어 시장 프로모션의 난이도를 크게 낮춥니다. 더욱 상징적인 것은, **78명(18.9%)**의 팬이 **'EXID가 나의 첫 콘서트가 될 것이다'**라고 답했다는 점으로, 이는 EXID가 평소 이벤트에 참여하지 않는 잠재 소비자까지 끌어들일 수 있는 독보적인 매력을 가지고 있으며, 시장에 귀중한 '신규 고객'을 유입시킬 수 있음을 증명합니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Geographical Distribution -->
+            <section id="location">
+                 <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <span data-lang-tw="深度洞察(5): 地理分佈與地點偏好">深度洞察(5): 地理分佈與地點偏好</span>
+                    <span data-lang-ko="심층 분석(5): 지리적 분포 및 장소 선호도" class="hidden">심층 분석(5): 지리적 분포 및 장소 선호도</span>
+                </h2>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="粉絲居住地分佈">粉絲居住地分佈</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="팬 거주지 분포">팬 거주지 분포</h3>
+                         <div class="relative h-96"><canvas id="geoChart"></canvas></div>
+                         <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="粉絲的地理分佈極為集中。高達 **74.2%** 的粉絲居住在以首都台北為核心的**北部地區**。這種高度的集中性，意味著行銷資源（如戶外廣告、媒體採訪、快閃活動）可以非常精準地投放在北部地區，以最小的成本達到最大的宣傳效益。">粉絲的地理分佈極為集中。高達 **74.2%** 的粉絲居住在以首都台北為核心的**北部地區**。這種高度的集中性，意味著行銷資源（如戶外廣告、媒體採訪、快閃活動）可以非常精準地投放在北部地區，以最小的成本達到最大的宣傳效益。</span>
+                                <span data-lang-ko="팬들의 지리적 분포는 매우 집중되어 있습니다. 무려 **74.2%**의 팬이 수도 타이베이를 중심으로 한 **북부 지역**에 거주하고 있습니다. 이러한 높은 집중도는 마케팅 자원(예: 옥외 광고, 미디어 인터뷰, 팝업 이벤트)을 북부 지역에 매우 정밀하게 투입하여 최소한의 비용으로 최대의 홍보 효과를 거둘 수 있음을 의미합니다." class="hidden">팬들의 지리적 분포는 매우 집중되어 있습니다. 무려 **74.2%**의 팬이 수도 타이베이를 중심으로 한 **북부 지역**에 거주하고 있습니다. 이러한 높은 집중도는 마케팅 자원(예: 옥외 광고, 미디어 인터뷰, 팝업 이벤트)을 북부 지역에 매우 정밀하게 투입하여 최소한의 비용으로 최대의 홍보 효과를 거둘 수 있음을 의미합니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800" data-lang-tw="期望舉辦城市">期望舉辦城市</h3>
+                        <h3 class="font-bold text-xl mb-4 text-center text-purple-800 hidden" data-lang-ko="선호 개최 도시">선호 개최 도시</h3>
+                        <div class="relative h-96"><canvas id="cityChart"></canvas></div>
+                         <div class="insight mt-4">
+                            <p>
+                                <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                                <span data-lang-tw="與居住地分佈相符，**台北 (220位)** 是粉絲們毫無懸念的首選城市。然而，一個更關鍵的數據是，有高達 **152位 (36.9%)** 的粉絲表示**「兩者（台北/高雄）皆可，我願意前往」**。這是一個強烈的忠誠度信號，代表近四成的粉絲願意為了EXID進行跨縣市的移動。這不僅賦予了主辦方在場地選擇上更大的彈性與議價空間，更再次證明了粉絲群的超高黏著度。">與居住地分佈相符，**台北 (220位)** 是粉絲們毫無懸念的首選城市。然而，一個更關鍵的數據是，有高達 **152位 (36.9%)** 的粉絲表示**「兩者（台北/高雄）皆可，我願意前往」**。這是一個強烈的忠誠度信號，代表近四成的粉絲願意為了EXID進行跨縣市的移動。這不僅賦予了主辦方在場地選擇上更大的彈性與議價空間，更再次證明了粉絲群的超高黏著度。</span>
+                                <span data-lang-ko="거주지 분포와 일치하게, **타이베이(220명)**가 팬들의 확실한 최선호 도시입니다. 하지만 더 중요한 데이터는, 무려 **152명(36.9%)**의 팬이 **'둘 다(타이베이/가오슝) 괜찮다, 갈 의향이 있다'**고 답했다는 점입니다. 이는 거의 40%에 달하는 팬들이 EXID를 위해 도시 간 이동을 감수할 의향이 있다는 강력한 충성도 신호입니다. 이는 주최측에게 공연장 선택에 있어 더 큰 유연성과 협상력을 부여할 뿐만 아니라, 팬덤의 초고도 결속력을 다시 한번 증명합니다." class="hidden">거주지 분포와 일치하게, **타이베이(220명)**가 팬들의 확실한 최선호 도시입니다. 하지만 더 중요한 데이터는, 무려 **152명(36.9%)**의 팬이 **'둘 다(타이베이/가오슝) 괜찮다, 갈 의향이 있다'**고 답했다는 점입니다. 이는 거의 40%에 달하는 팬들이 EXID를 위해 도시 간 이동을 감수할 의향이 있다는 강력한 충성도 신호입니다. 이는 주최측에게 공연장 선택에 있어 더 큰 유연성과 협상력을 부여할 뿐만 아니라, 팬덤의 초고도 결속력을 다시 한번 증명합니다.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Word Cloud & Testimonials -->
+            <section id="testimonials">
+                <h2 class="text-3xl font-bold text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                    <span data-lang-tw="深度洞察(6): 粉絲心聲牆 - 無可取代的忠誠度證明">深度洞察(6): 粉絲心聲牆 - 無可取代的忠誠度證明</span>
+                    <span data-lang-ko="심층 분석(6): 팬들의 목소리 - 대체 불가능한 충성도의 증거" class="hidden">심층 분석(6): 팬들의 목소리 - 대체 불가능한 충성도의 증거</span>
+                </h2>
+                <div class="bg-white p-8 rounded-lg shadow-md">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div class="testimonial">
+                             <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="最強忠誠度">最強忠誠度</p>
+                             <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="최고의 충성도">최고의 충성도</p>
+                            <p data-lang-tw="&quot;第一場showcase在台灣...我真的想看她們演唱會，超過現在任何一個團體，<strong class='text-purple-900'>即便和Blackpink選一個我還是選Exid</strong>。&quot;">"第一場showcase在台灣...我真的想看她們演唱會，超過現在任何一個團體，<strong class='text-purple-900'>即便和Blackpink選一個我還是選Exid</strong>。"</p>
+                            <p data-lang-ko="'첫 쇼케이스가 대만이었어요... 지금 어떤 그룹보다도 그들의 콘서트가 보고 싶어요. <strong class='text-purple-900'>만약 블랙핑크와 EXID 중 하나를 선택해야 한다면, 저는 여전히 EXID를 선택할 겁니다</strong>.'" class="hidden">'첫 쇼케이스가 대만이었어요... 지금 어떤 그룹보다도 그들의 콘서트가 보고 싶어요. <strong class='text-purple-900'>만약 블랙핑크와 EXID 중 하나를 선택해야 한다면, 저는 여전히 EXID를 선택할 겁니다</strong>.'</p>
+                        </div>
+                        <div class="testimonial">
+                             <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="粉絲成長紅利">粉絲成長紅利</p>
+                             <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="팬 성장 보너스">팬 성장 보너스</p>
+                            <p data-lang-tw="&quot;上次EXID來的時候還是國中生，<strong class='text-purple-900'>現在大學畢業有錢了</strong>，來台灣我一定會到場。&quot;">"上次EXID來的時候還是國中生，<strong class='text-purple-900'>現在大學畢業有錢了</strong>，來台灣我一定會到場。"</p>
+                            <p data-lang-ko="'지난번에 EXID가 왔을 때는 중학생이었는데, <strong class='text-purple-900'>이제 대학 졸업하고 돈도 벌어요</strong>. 대만에 오면 무조건 갈 거예요.'" class="hidden">'지난번에 EXID가 왔을 때는 중학생이었는데, <strong class='text-purple-900'>이제 대학 졸업하고 돈도 벌어요</strong>. 대만에 오면 무조건 갈 거예요.'</p>
+                        </div>
+                         <div class="testimonial">
+                             <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="跨國消費力">跨國消費力</p>
+                             <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="해외 원정 소비력">해외 원정 소비력</p>
+                            <p data-lang-tw="&quot;自從這個月花了大把鈔票<strong class='text-purple-900'>飛到澳門場</strong>，就引頸期盼可以在台灣也等到演唱會... 當天也有許多台灣粉絲們一直在等候！&quot;">"自從這個月花了大把鈔票<strong class='text-purple-900'>飛到澳門場</strong>，就引頸期盼可以在台灣也等到演唱會... 當天也有許多台灣粉絲們一直在等候！"</p>
+                            <p data-lang-ko="'이번 달에 큰 돈을 들여 <strong class='text-purple-900'>마카오 공연에 다녀온 후로</strong>, 대만에서도 콘서트를 기다리고 있어요... 그날 그곳에는 많은 대만 팬들이 기다리고 있었습니다!'" class="hidden">'이번 달에 큰 돈을 들여 <strong class='text-purple-900'>마카오 공연에 다녀온 후로</strong>, 대만에서도 콘서트를 기다리고 있어요... 그날 그곳에는 많은 대만 팬들이 기다리고 있었습니다!'</p>
+                        </div>
+                        <div class="testimonial">
+                            <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="潛在市場實力">潛在市場實力</p>
+                             <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="잠재적 시장의 힘">잠재적 시장의 힘</p>
+                            <p data-lang-tw="&quot;粉絲大多已經不活躍在網路平台上，多數已出社會，<strong class='text-purple-900'>金錢實力是有的</strong>...之前沒有那個經濟實力，但現在願意花錢入場。&quot;">"粉絲大多已經不活躍在網路平台上，多數已出社會，<strong class='text-purple-900'>金錢實力是有的</strong>...之前沒有那個經濟實力，但現在願意花錢入場。"</p>
+                            <p data-lang-ko="'팬들 대부분은 이제 온라인에서 활동하지 않고, 대부분 사회인이 되었습니다. <strong class='text-purple-900'>경제력은 충분해요</strong>... 예전에는 그럴 능력이 없었지만, 지금은 기꺼이 돈을 내고 입장할 겁니다.'" class="hidden">'팬들 대부분은 이제 온라인에서 활동하지 않고, 대부분 사회인이 되었습니다. <strong class='text-purple-900'>경제력은 충분해요</strong>... 예전에는 그럴 능력이 없었지만, 지금은 기꺼이 돈을 내고 입장할 겁니다.'</p>
+                        </div>
+                        <div class="testimonial">
+                            <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="壓抑已久的需求">壓抑已久的需求</p>
+                            <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="억눌렸던 수요">억눌렸던 수요</p>
+                             <p data-lang-tw="&quot;拜託了🥹🥹我等很久了，人生第一個喜歡的女團，看到演唱會我真的<strong class='text-purple-900'>死而無憾</strong>。&quot;">"拜託了🥹🥹我等很久了，人生第一個喜歡的女團，看到演唱會我真的<strong class='text-purple-900'>死而無憾</strong>。"</p>
+                             <p data-lang-ko="'제발요 🥹🥹 정말 오래 기다렸어요. 제 인생 첫 걸그룹이에요. 콘서트를 본다면 정말 <strong class='text-purple-900'>여한이 없을 거예요</strong>.'" class="hidden">'제발요 🥹🥹 정말 오래 기다렸어요. 제 인생 첫 걸그룹이에요. 콘서트를 본다면 정말 <strong class='text-purple-900'>여한이 없을 거예요</strong>.'</p>
+                        </div>
+                         <div class="testimonial">
+                            <p class="text-lg font-bold mb-2 text-purple-700" data-lang-tw="最真誠的期盼">最真誠的期盼</p>
+                             <p class="text-lg font-bold mb-2 text-purple-700 hidden" data-lang-ko="가장 진솔한 염원">가장 진솔한 염원</p>
+                            <p data-lang-tw="&quot;身為LEGGO真的很感謝你們！不管最後有沒有成，都很<strong class='text-purple-900'>謝謝你們</strong>一起關心 5XID ❤️&quot;">"身為LEGGO真的很感謝你們！不管最後有沒有成，都很<strong class='text-purple-900'>謝謝你們</strong>一起關心 5XID ❤️"</p>
+                            <p data-lang-ko="'LEGGO로서 정말 감사합니다! 결과가 어떻게 되든, 5XID에 관심을 가져주셔서 <strong class='text-purple-900'>정말 감사합니다</strong> ❤️'" class="hidden">'LEGGO로서 정말 감사합니다! 결과가 어떻게 되든, 5XID에 관심을 가져주셔서 <strong class='text-purple-900'>정말 감사합니다</strong> ❤️'</p>
+                        </div>
+                    </div>
+                     <div class="insight mt-6">
+                        <p>
+                            <strong data-lang-tw="市場洞察：">市場洞察：</strong><strong data-lang-ko="시장 인사이트:" class="hidden">시장 인사이트:</strong>
+                            <span data-lang-tw="質化數據的價值不亞於量化分析。粉絲的留言揭示了**「粉絲成長紅利」**（當年無消費能力的學生已成為社會主力）與**「跨國消費行為」**的鐵證。這種由長久等待和深厚情感積累而成的忠誠度，是任何行銷活動都難以複製的寶貴資產，也是票房最堅實、最無可取代的保證。">質化數據的價值不亞於量化分析。粉絲的留言揭示了**「粉絲成長紅利」**（當年無消費能力的學生已成為社會主力）與**「跨國消費行為」**的鐵證。這種由長久等待和深厚情感積累而成的忠誠度，是任何行銷活動都難以複製的寶貴資產，也是票房最堅實、最無可取代的保證。</span>
+                            <span data-lang-ko="정성적 데이터의 가치는 정량 분석 못지않습니다. 팬들의 코멘트는 **'팬 성장 보너스'**(과거 소비력이 없던 학생들이 사회의 주역이 됨)와 **'해외 원정 소비'**에 대한 확실한 증거를 보여줍니다. 오랜 기다림과 깊은 감정으로 축적된 이러한 충성도는 어떤 마케팅 활동으로도 복제하기 어려운 소중한 자산이며, 티켓 판매의 가장 견고하고 대체 불가능한 보증수표입니다." class="hidden">정성적 데이터의 가치는 정량 분석 못지않습니다. 팬들의 코멘트는 **'팬 성장 보너스'**(과거 소비력이 없던 학생들이 사회의 주역이 됨)와 **'해외 원정 소비'**에 대한 확실한 증거를 보여줍니다. 오랜 기다림과 깊은 감정으로 축적된 이러한 충성도는 어떤 마케팅 활동으로도 복제하기 어려운 소중한 자산이며, 티켓 판매의 가장 견고하고 대체 불가능한 보증수표입니다.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Conclusion -->
+        <section id="conclusion" class="mt-16">
+            <h2 class="text-3xl font-bold text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span data-lang-tw="最終結論與建議">最終結論與建議</span>
+                <span data-lang-ko="최종 결론 및 제언" class="hidden">최종 결론 및 제언</span>
+            </h2>
+            <div class="bg-white p-8 rounded-xl shadow-xl space-y-4 text-gray-700">
+                <p class="text-lg" data-lang-tw="綜合以上所有量化數據與質化洞察，本報告得出以下結論：">綜合以上所有量化數據與質化洞察，本報告得出以下結論：</p>
+                <p class="text-lg hidden" data-lang-ko="이상의 모든 정량적 데이터와 정성적 통찰을 종합하여, 본 보고서는 다음과 같은 결론을 내립니다:">이상의 모든 정량적 데이터와 정성적 통찰을 종합하여, 본 보고서는 다음과 같은 결론을 내립니다:</p>
+                <p class="text-xl" data-lang-tw="EXID 在台灣的市場不僅僅是「存在潛力」，而是一個**結構極度健康、消費主力明確、忠誠度無與倫比且動能正在全面爆發的黃金市場**。粉絲群體已經用最直接的數據和最真誠的言行，證明了他們長久以來的等待與即將付諸實現的強大購買力。">EXID 在台灣的市場不僅僅是「存在潛力」，而是一個**結構極度健康、消費主力明確、忠誠度無與倫比且動能正在全面爆發的黃金市場**。粉絲群體已經用最直接的數據和最真誠的言行，證明了他們長久以來的等待與即將付諸實現的強大購買力。</p>
+                <p class="text-xl hidden" data-lang-ko="EXID의 대만 시장은 단순한 '잠재력'을 넘어, **구조적으로 매우 건강하고, 핵심 소비층이 명확하며, 비할 데 없는 충성도와 폭발적인 동력**을 가진 황금 시장입니다. 팬 그룹은 직접적인 데이터와 진심 어린 행동으로 그들의 오랜 기다림과 곧 현실화될 강력한 구매력을 증명했습니다." >EXID의 대만 시장은 단순한 '잠재력'을 넘어, **구조적으로 매우 건강하고, 핵심 소비층이 명확하며, 비할 데 없는 충성도와 폭발적인 동력**을 가진 황금 시장입니다. 팬 그룹은 직접적인 데이터와 진심 어린 행동으로 그들의 오랜 기다림과 곧 현실화될 강력한 구매력을 증명했습니다.</p>
+                <p class="text-2xl font-bold text-purple-700 mt-4" data-lang-tw="我們強烈建議，應立即啟動 EXID 2025-2026 台灣專場活動的企劃與洽談程序。這將不僅是一場能輕易實現商業成功的演出，更是一次回應廣大粉絲多年期盼、創造雙贏局面的盛會。">我們強烈建議，應立即啟動 EXID 2025-2026 台灣專場活動的企劃與洽談程序。這將不僅是一場能輕易實現商業成功的演出，更是一次回應廣大粉絲多年期盼、創造雙贏局面的盛會。</p>
+                <p class="text-2xl font-bold text-purple-700 mt-4 hidden" data-lang-ko="이에, EXID의 2025-2026 대만 단독 이벤트 기획 및 협상 절차를 즉시 개시할 것을 강력히 제안합니다. 이는 단순히 상업적 성공을 쉽게 달성할 수 있는 공연일 뿐만 아니라, 수많은 팬들의 오랜 염원에 부응하고 모두에게 윈윈이 될 수 있는 축제가 될 것입니다.">이에, EXID의 2025-2026 대만 단독 이벤트 기획 및 협상 절차를 즉시 개시할 것을 강력히 제안합니다. 이는 단순히 상업적 성공을 쉽게 달성할 수 있는 공연일 뿐만 아니라, 수많은 팬들의 오랜 염원에 부응하고 모두에게 윈윈이 될 수 있는 축제가 될 것입니다.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 bg-gray-900 text-white mt-16 no-print">
+        <p>&copy; 2025 LEGGOs in Taiwan Initiative. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // --- DATA STORE (for language switching) ---
+        const chartDataSets = {
+            intention: {
+                labels: {
+                    tw: ['2分', '3分', '4分', '5分 (最高)'],
+                    ko: ['2점', '3점', '4점', '5점 (최고)']
+                },
+                data: [2, 21, 126, 263]
+            },
+            age: {
+                labels: {
+                    tw: ['18-24 歲', '25-29 歲', '30-39 歲', '40 歲以上'],
+                    ko: ['18-24세', '25-29세', '30-39세', '40세 이상']
+                },
+                data: [76, 149, 160, 27]
+            },
+            seniority: {
+                labels: {
+                    tw: ['8 年以上', '5 - 8 年', '3 - 5 年', '1 - 3 年'],
+                    ko: ['8년 이상', '5 - 8년', '3 - 5년', '1 - 3년']
+                },
+                data: [142, 212, 49, 9]
+            },
+            price: {
+                labels: {
+                    tw: ['NT$ 4,201-5,800', 'NT$ 2,801-4,200', '更高價也考慮', 'NT$ 5,801-7,000', 'NT$ 2,800 以下'],
+                    ko: ['NT$ 4,201-5,800', 'NT$ 2,801-4,200', '더 높은 가격도 고려', 'NT$ 5,801-7,000', 'NT$ 2,800 이하']
+                },
+                data: [153, 131, 64, 47, 17]
+            },
+            benefits: {
+                labels: {
+                    tw: ['純看演出', 'Send-Off', '團體合照', '觀看彩排', '官方海報/小卡', '簽名拍立得', 'Hi-Touch'],
+                    ko: ['공연만 관람', 'Send-Off', '단체 사진', '사운드체크 관람', '공식 포스터/포토카드', '사인 폴라로이드', '하이터치']
+                },
+                data: [179, 150, 165, 168, 173, 187, 225]
+            },
+            merch: {
+                 labels: {
+                    tw: ['實體專輯/DVD', '官方周邊', '數位音源', '付費線上內容', '未來願意買', '無購買經驗'],
+                    ko: ['음반/DVD', '공식 굿즈', '디지털 음원', '유료 온라인 콘텐츠', '향후 구매 의사 있음', '구매 경험 없음']
+                },
+                data: [305, 235, 201, 114, 85, 27]
+            },
+            attendance: {
+                labels: {
+                    tw: ['有, 3場+', '有, 1-2場', '沒有, EXID是第一場', '沒有參加過'],
+                    ko: ['있음, 3회 이상', '있음, 1-2회', '없음, EXID가 처음', '참여 경험 없음']
+                },
+                data: [168, 100, 78, 66]
+            },
+            geo: {
+                labels: {
+                    tw: ['北部', '南部', '中部', '東部/離島/海外'],
+                    ko: ['북부', '남부', '중부', '동부/해외']
+                },
+                data: [306, 55, 42, 9]
+            },
+            city: {
+                labels: {
+                    tw: ['高雄', '兩者皆可', '台北'],
+                    ko: ['가오슝', '어디든 가능', '타이베이']
+                },
+                data: [40, 152, 220]
+            }
+        };
+        
+        const chartInstances = {};
+        let currentLang = 'tw';
+
+        const createChart = (ctx, type, dataKey, options) => {
+            if (!ctx) return;
+            const chartData = chartDataSets[dataKey];
+            const config = {
+                type: type,
+                data: {
+                    labels: chartData.labels[currentLang],
+                    datasets: [{
+                        label: currentLang === 'tw' ? '人數' : '명',
+                        data: chartData.data,
+                        backgroundColor: type === 'bar' ? '#8b5cf6' : ['#6d28d9', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe', '#ede9fe'],
+                    }]
+                },
+                options: options
+            };
+            if (type === 'bar' && options.indexAxis === 'y') {
+                const zipped = chartData.labels[currentLang].map((label, i) => ({label, data: chartData.data[i]}));
+                zipped.sort((a, b) => a.data - b.data);
+                config.data.labels = zipped.map(item => item.label);
+                config.data.datasets[0].data = zipped.map(item => item.data);
+            }
+            return new Chart(ctx, config);
+        };
+
+        const renderAllCharts = () => {
+            Object.values(chartInstances).forEach(chart => chart.destroy());
+
+            const defaultBarOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { font: { size: 12, family: "'Noto Sans TC', 'Noto Sans KR', sans-serif" } } }, y: { ticks: { font: { size: 12, family: "'Noto Sans TC', 'Noto Sans KR', sans-serif" } } } } };
+            const defaultPieOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { size: 14, family: "'Noto Sans TC', 'Noto Sans KR', sans-serif" } } } } };
+            
+            const chartsToRender = {
+                intention: {type: 'bar', options: defaultBarOptions},
+                age: {type: 'bar', options: defaultBarOptions},
+                seniority: {type: 'pie', options: defaultPieOptions},
+                price: {type: 'bar', options: defaultBarOptions},
+                benefits: {type: 'bar', options: {...defaultBarOptions, indexAxis: 'y'}},
+                merch: {type: 'doughnut', options: defaultPieOptions},
+                attendance: {type: 'doughnut', options: defaultPieOptions},
+                geo: {type: 'pie', options: defaultPieOptions},
+                city: {type: 'bar', options: {...defaultBarOptions, indexAxis: 'y'}}
+            };
+
+            for (const [key, val] of Object.entries(chartsToRender)) {
+                const ctx = document.getElementById(`${key}Chart`)?.getContext('2d');
+                if (ctx) {
+                    chartInstances[key] = createChart(ctx, val.type, key, val.options);
+                }
+            }
+        };
+
+        const switchLanguage = () => {
+            const newLang = currentLang === 'tw' ? 'ko' : 'tw';
+            const oldLang = currentLang;
+
+            document.querySelectorAll(`[data-lang-${oldLang}]`).forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll(`[data-lang-${newLang}]`).forEach(el => el.classList.remove('hidden'));
+            
+            if (newLang === 'ko') {
+                document.body.classList.add('font-kr');
+            } else {
+                document.body.classList.remove('font-kr');
+            }
+
+            document.documentElement.lang = newLang === 'tw' ? 'zh-Hant' : 'ko';
+            document.getElementById('lang-switch-btn').textContent = newLang === 'tw' ? '한국어' : '繁體中文';
+            
+            currentLang = newLang;
+            renderAllCharts();
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllCharts();
+            document.getElementById('lang-switch-btn').addEventListener('click', switchLanguage);
+        });
+    </script>
+</body>
+</html>
+
