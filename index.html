@@ -2,7 +2,7 @@
 <html lang="zh-Hant" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EXID 台灣演唱會市場可行性分析報告</title>
     <link rel="icon" type="image/png" href="https://i.meee.com.tw/btt5ieR.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,11 +16,14 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
         
+        html, body {
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+        }
+        
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #000000;
             color: #e5e5e5; /* neutral-200 */
-            overflow-x: hidden; /* Prevents horizontal scrolling */
         }
 
         .full-page-section {
@@ -30,7 +33,7 @@
             justify-content: center;
             align-items: center;
             padding: 5rem 1.5rem;
-            width: 100%;
+            width: 100vw; /* Use viewport width to ensure it fills screen */
             border-bottom: 1px solid #262626; /* neutral-800 */
         }
         
@@ -638,4 +641,3 @@
     </script>
 </body>
 </html>
-
