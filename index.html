@@ -15,8 +15,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
         
-        html {
-            scroll-snap-type: y mandatory;
+        @media (min-width: 769px) {
+            html {
+                scroll-snap-type: y mandatory;
+            }
         }
 
         body {
@@ -397,11 +399,43 @@
                                 </blockquote>
                             </div>
                         </div>
+                        <!-- Slide 6 -->
+                        <div class="swiper-slide">
+                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
+                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>來自粉絲的感謝</h4>
+                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>팬으로부터의 감사</h4>
+                                <blockquote class="border-l-4 border-violet-700 pl-4">
+                                    <p class="text-neutral-300 italic" data-lang-tw>「希望EXID能來台灣！相信他們依然很受台灣歌迷喜愛，也感謝主辦方至少發問卷調查！」</p>
+                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「EXID가 대만에 올 수 있기를 바랍니다! 여전히 대만 팬들에게 많은 사랑을 받고 있다고 믿으며, 최소한 설문조사라도 진행해주신 주최측에 감사드립니다!」</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <!-- Slide 7 -->
+                        <div class="swiper-slide">
+                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
+                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>無懼距離的熱情</h4>
+                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>거리를 두려워하지 않는 열정</h4>
+                                <blockquote class="border-l-4 border-violet-700 pl-4">
+                                    <p class="text-neutral-300 italic" data-lang-tw>「只要能來，不管在哪裡都衝！」</p>
+                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「오기만 한다면, 어디든 달려갈 거예요.」</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <!-- Slide 8 -->
+                        <div class="swiper-slide">
+                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
+                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>最純粹的願望</h4>
+                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>가장 순수한 소원</h4>
+                                <blockquote class="border-l-4 border-violet-700 pl-4">
+                                    <p class="text-neutral-300 italic" data-lang-tw>「真的好想好想再看到合體，拜託了。」</p>
+                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「정말 정말 다시 완전체를 보고 싶어요, 제발요.」</p>
+                                </blockquote>
+                            </div>
+                        </div>
                     </div>
                     <!-- Add Pagination -->
                     <div class="swiper-pagination"></div>
                 </div>
-
              </div>
         </section>
 
@@ -596,4 +630,3 @@
     </script>
 </body>
 </html>
-
