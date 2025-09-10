@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -33,7 +32,7 @@
             justify-content: center;
             align-items: center;
             padding: 5rem 1.5rem;
-            width: 100vw; 
+            width: 100%; 
             border-bottom: 1px solid #262626; /* neutral-800 */
             box-sizing: border-box;
         }
@@ -76,32 +75,54 @@
             background-color: #a3a3a3; /* neutral-400 */
             border: 4px solid #171717; /* neutral-900 */
         }
-
-        .swiper-container {
-            width: 100%;
-            max-width: 1200px;
-            padding-top: 20px;
-            padding-bottom: 50px;
-        }
-        .swiper-slide {
-            width: auto;
-        }
-        .swiper-pagination-bullet {
-            background: #a3a3a3;
-        }
-        .swiper-pagination-bullet-active {
-            background: #a855f7;
-        }
         
         /* Animation styles */
         .animated-item {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
         }
         .animated-item.is-visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Scroller styles for Fan Wall */
+        .scroller {
+          max-width: 1200px;
+          width: 100%;
+        }
+
+        .scroller__inner {
+          padding-block: 1rem;
+          display: flex;
+          gap: 1.5rem; /* Increased gap */
+        }
+
+        .scroller[data-animated="true"] {
+          overflow: hidden;
+          -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+          mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+        }
+
+        .scroller[data-animated="true"] .scroller__inner {
+          width: max-content;
+          flex-wrap: nowrap;
+          animation: scroll var(--_animation-duration, 40s) var(--_animation-direction, forwards) linear infinite;
+        }
+        
+        .scroller[data-direction="right"] {
+            --_animation-direction: reverse;
+        }
+        
+        .scroller:hover .scroller__inner {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+          to {
+            transform: translate(calc(-50% - 0.75rem));
+          }
         }
 
         /* Print-specific styles */
@@ -142,6 +163,7 @@
             .text-neutral-400, .text-neutral-500, .text-neutral-300, .text-violet-400 { color: #000000 !important; }
             .border-neutral-700, .border-neutral-600 { border-color: #cccccc !important; }
             .invert { filter: invert(0) !important; }
+            .scroller { display: none; } /* Hide scrolling element in print */
         }
     </style>
 </head>
@@ -365,99 +387,22 @@
                     <h3 class="font-bold text-xl mb-12 text-neutral-300 hidden" data-lang-ko>대체 불가능한 충성도의 증거</h3>
                 </div>
                 
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>堅定不移的承諾</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>확고한 약속</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「拜託一定要辦成！不管怎樣都會去！」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「제발 꼭 성사시켜 주세요! 어떻게든 갈 거예요!」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 2 -->
-                        <div class="swiper-slide">
-                            <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>超越時間的思念</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>시간을 초월한 그리움</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                     <p class="text-neutral-300 italic" data-lang-tw>「從一代團追到現在，孩子都生了，就等EXID合體來台灣！這是我的青春！」</p>
-                                     <p class="text-neutral-300 italic hidden" data-lang-ko>「1세대 아이돌부터 지금까지 좋아했는데, 이제 아이도 낳았어요. EXID 완전체가 대만에 오기만을 기다리고 있습니다! 이게 제 청춘이에요!」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 3 -->
-                        <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>潛在的廣大客群</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>광범위한 잠재 고객</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「雖然可能稱不上粉絲，但喜歡的歌還是蠻多首的，有機會的話希望可以進場。」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「팬이라고 하긴 좀 그렇지만, 좋아하는 노래는 꽤 많아요. 기회가 된다면 꼭 가고 싶어요.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 4 -->
-                         <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>對演出本身的渴望</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>공연 자체에 대한 갈망</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「以上福利對我影響不大，我只希望能看到演出。」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「위의 혜택들은 저에게 큰 영향을 주지 않아요, 저는 그저 공연을 보고 싶을 뿐입니다.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 5 -->
-                        <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>強大的消費潛力</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>강력한 소비 잠재력</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「只要福利夠好，更高的票價都願意考慮。」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「혜택만 좋다면 더 비싼 티켓도 고려할 의향이 있습니다.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                         <!-- Slide 6 -->
-                        <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>無懼距離的熱情</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>거리를 두려워하지 않는 열정</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「只要能來，不管在哪裡都衝！」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「오기만 한다면, 어디든 달려갈 거예요.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 7 -->
-                        <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>青春無價</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>청춘은 값을 매길 수 없다</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「錢不是問題，青春才是。」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「돈이 문제가 아니라, 청춘이 문제죠.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                        <!-- Slide 8 -->
-                        <div class="swiper-slide">
-                           <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
-                                <h4 class="font-bold text-lg text-violet-400 mb-2" data-lang-tw>最純粹的願望</h4>
-                                <h4 class="font-bold text-lg text-violet-400 mb-2 hidden" data-lang-ko>가장 순수한 소원</h4>
-                                <blockquote class="border-l-4 border-violet-700 pl-4">
-                                    <p class="text-neutral-300 italic" data-lang-tw>「真的好想好想再看到合體，拜託了。」</p>
-                                    <p class="text-neutral-300 italic hidden" data-lang-ko>「정말 정말 다시 완전체를 보고 싶어요, 제발요.」</p>
-                                </blockquote>
-                            </div>
-                        </div>
+                <div class="flex flex-col gap-4">
+                    <div id="scroller1" class="scroller" style="--_animation-duration: 60s;">
+                        <ul class="scroller__inner">
+                            <!-- Content will be populated by JS -->
+                        </ul>
                     </div>
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination"></div>
+                    <div id="scroller2" class="scroller" data-direction="right" style="--_animation-duration: 90s;">
+                        <ul class="scroller__inner">
+                             <!-- Content will be populated by JS -->
+                        </ul>
+                    </div>
+                    <div id="scroller3" class="scroller" style="--_animation-duration: 70s;">
+                         <ul class="scroller__inner">
+                             <!-- Content will be populated by JS -->
+                        </ul>
+                    </div>
                 </div>
              </div>
         </section>
@@ -485,7 +430,6 @@
 
     </main>
     
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         let currentLang = 'tw';
         const chartInstances = {};
@@ -522,6 +466,21 @@
                 region: { '北部': '북부', '中部': '중부', '南部': '남부', '東部/離島': '동부/섬' }
             }
         };
+        const fanComments = [
+            { tw: "堅定不移的承諾", ko: "확고한 약속", tw_quote: "拜託一定要辦成！不管怎樣都會去！", ko_quote: "제발 꼭 성사시켜 주세요! 어떻게든 갈 거예요!" },
+            { tw: "超越時間的思念", ko: "시간을 초월한 그리움", tw_quote: "從一代團追到現在，孩子都生了，就等EXID合體來台灣！這是我的青春！", ko_quote: "1세대 아이돌부터 지금까지 좋아했는데, 이제 아이도 낳았어요. EXID 완전체가 대만에 오기만을 기다리고 있습니다! 이게 제 청춘이에요!" },
+            { tw: "潛在的廣大客群", ko: "광범위한 잠재 고객", tw_quote: "雖然可能稱不上粉絲，但喜歡的歌還是蠻多首的，有機會的話希望可以進場。", ko_quote: "팬이라고 하긴 좀 그렇지만, 좋아하는 노래는 꽤 많아요. 기회가 된다면 꼭 가고 싶어요." },
+            { tw: "對演出本身的渴望", ko: "공연 자체에 대한 갈망", tw_quote: "以上福利對我影響不大，我只希望能看到演出。", ko_quote: "위의 혜택들은 저에게 큰 영향을 주지 않아요, 저는 그저 공연을 보고 싶을 뿐입니다." },
+            { tw: "強大的消費潛力", ko: "강력한 소비 잠재력", tw_quote: "只要福利夠好，更高的票價都願意考慮。", ko_quote: "혜택만 좋다면 더 비싼 티켓도 고려할 의향이 있습니다." },
+            { tw: "無懼距離的熱情", ko: "거리를 두려워하지 않는 열정", tw_quote: "只要能來，不管在哪裡都衝！", ko_quote: "오기만 한다면, 어디든 달려갈 거예요." },
+            { tw: "青春無價", ko: "청춘은 값을 매길 수 없다", tw_quote: "錢不是問題，青春才是。", ko_quote: "돈이 문제가 아니라, 청춘이 문제죠." },
+            { tw: "最純粹的願望", ko: "가장 순수한 소원", tw_quote: "真的好想好想再看到合體，拜託了。", ko_quote: "정말 정말 다시 완전체를 보고 싶어요, 제발요." },
+            { tw: "期待已久", ko: "오래된 기다림", tw_quote: "七年了，等的花兒都謝了，快來吧！", ko_quote: "7년이나 지났어요, 기다리다 꽃도 다 졌어요. 빨리 와주세요!" },
+            { tw: "具體場地建議", ko: "구체적인 장소 제안", tw_quote: "TICC 的音響很棒，拜託選這邊！", ko_quote: "TICC 음향이 훌륭해요, 제발 여기로 선택해주세요!" },
+            { tw: "粉絲都準備好了", ko: "팬들은 준비 완료", tw_quote: "全體LEGGO都準備好了，主辦方勇敢衝吧！", ko_quote: "모든 레고가 준비됐어요, 주최측은 용감하게 나아가세요!" },
+            { tw: "抵制黃牛的期盼", ko: "암표상 반대에 대한 기대", tw_quote: "希望能有實名制，杜絕黃牛，讓我們這些真粉絲能進場。", ko_quote: "실명제를 도입해서 암표상을 막고, 우리 같은 진짜 팬들이 입장할 수 있기를 바랍니다." }
+        ];
+
 
         const createChart = (ctx, type, dataKey, options) => {
             if (chartInstances[dataKey]) {
@@ -603,21 +562,70 @@
             }
         };
 
-        const switchLanguage = () => {
-            const oldLang = currentLang;
-            const newLang = oldLang === 'tw' ? 'ko' : 'tw';
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const populateFanWall = () => {
+            const shuffledComments = shuffleArray([...fanComments]);
+            const commentsPerScroller = Math.ceil(shuffledComments.length / 3);
             
+            const scrollers = [
+                document.querySelector('#scroller1 .scroller__inner'),
+                document.querySelector('#scroller2 .scroller__inner'),
+                document.querySelector('#scroller3 .scroller__inner')
+            ];
+
+            scrollers.forEach((scroller, index) => {
+                if(!scroller) return;
+                const start = index * commentsPerScroller;
+                const end = start + commentsPerScroller;
+                const commentsSlice = shuffledComments.slice(start, end);
+                
+                commentsSlice.forEach(comment => {
+                    const li = document.createElement('li');
+                    li.className = 'flex-shrink-0';
+                    li.innerHTML = `
+                        <div class="bg-black/20 p-6 rounded-lg border border-neutral-800 h-full flex flex-col justify-center w-80 md:w-96">
+                            <h4 class="font-bold text-lg text-violet-400 mb-2">
+                                <span data-lang-tw>${comment.tw}</span>
+                                <span data-lang-ko class="hidden">${comment.ko}</span>
+                            </h4>
+                            <blockquote class="border-l-4 border-violet-700 pl-4">
+                                <p class="text-neutral-300 italic">
+                                    <span data-lang-tw>${comment.tw_quote}</span>
+                                    <span data-lang-ko class="hidden">${comment.ko_quote}</span>
+                                </p>
+                            </blockquote>
+                        </div>
+                    `;
+                    scroller.appendChild(li);
+                });
+            });
+             updateLanguageVisibility(); // Ensure correct language is shown on initial load
+        };
+        
+        const updateLanguageVisibility = () => {
+            const oldLang = currentLang === 'tw' ? 'ko' : 'tw';
+            const newLang = currentLang;
             document.querySelectorAll(`[data-lang-${oldLang}]`).forEach(el => { el.classList.add('hidden'); });
             document.querySelectorAll(`[data-lang-${newLang}]`).forEach(el => { el.classList.remove('hidden'); });
-            
-            if (newLang === 'ko') { document.body.classList.add('font-kr'); } 
-            else { document.body.classList.remove('font-kr'); }
+        }
 
-            document.documentElement.lang = newLang === 'tw' ? 'zh-Hant' : 'ko';
-            document.getElementById('lang-switch-btn').textContent = newLang === 'tw' ? '한국어' : '繁體中文';
-            document.title = translations.pageTitle[newLang];
+
+        const switchLanguage = () => {
+            currentLang = currentLang === 'tw' ? 'ko' : 'tw';
             
-            currentLang = newLang;
+            updateLanguageVisibility();
+            
+            document.documentElement.lang = currentLang === 'tw' ? 'zh-Hant' : 'ko';
+            document.getElementById('lang-switch-btn').textContent = currentLang === 'tw' ? '한국어' : '繁體中文';
+            document.title = translations.pageTitle[currentLang];
+            
             renderAllCharts();
         };
 
@@ -629,27 +637,36 @@
                         entry.target.classList.add('is-visible');
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { 
+                root: null,
+                threshold: 0.15 
+            });
 
             const animatedItems = document.querySelectorAll('.animated-item');
             animatedItems.forEach(item => {
                 observer.observe(item);
             });
             
-            var swiper = new Swiper('.swiper-container', {
-                slidesPerView: 'auto',
-                centeredSlides: true,
-                spaceBetween: 30,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                loop: true,
-                autoplay: {
-                    delay: 4000,
-                    disableOnInteraction: false,
-                },
-            });
+             // Fan Wall Scroller
+            populateFanWall();
+            const scrollers = document.querySelectorAll(".scroller");
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+              addAnimation();
+            }
+
+            function addAnimation() {
+              scrollers.forEach((scroller) => {
+                scroller.setAttribute("data-animated", true);
+                const scrollerInner = scroller.querySelector(".scroller__inner");
+                const scrollerContent = Array.from(scrollerInner.children);
+                scrollerContent.forEach((item) => {
+                  const duplicatedItem = item.cloneNode(true);
+                  duplicatedItem.setAttribute("aria-hidden", true);
+                  scrollerInner.appendChild(duplicatedItem);
+                });
+              });
+            }
+
 
             Chart.register(ChartDataLabels);
             renderAllCharts();
